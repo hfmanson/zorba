@@ -20,7 +20,7 @@
 
 namespace zorba { 
 
-
+#undef ZORBA_HAVE_PTHREAD_H
 Mutex::Mutex()
 {
 #ifdef ZORBA_HAVE_PTHREAD_H

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 zorba.io
+ * Copyright 2006-2008 The FLWOR Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,12 @@
 # endif
 #endif
 
-#if defined( __APPLE__ )
-# include <libkern/OSAtomic.h>
+//
+// Test first for and prefer gcc's atomic operations over all others since
+// they're an order of magnitude faster.
+//
+#if defined( __EMSCRIPTEN__ )
+#include <atomic>
 #elif defined( __GNUC__ )
 # if __GNUC__ * 100 + __GNUC_MINOR__ >= 402
 #   include <ext/atomicity.h>
@@ -36,6 +40,8 @@
 # else
 #   define GNU_EXCHANGE_AND_ADD __gnu_cxx::__exchange_and_add
 # endif
+#elif defined( __APPLE__ )
+# include <libkern/OSAtomic.h>
 #elif defined( __FreeBSD__ )
 # include <sys/types.h>
 # include <machine/atomic.h>
@@ -62,12 +68,12 @@ namespace zorba {
  */
 class atomic_int {
 public:
-#if defined( __APPLE__ ) || defined( __NetBSD__ ) || defined( __SOLARIS__ )
-  typedef int32_t value_type;
+#if defined( __FreeBSD__ ) || defined( __EMSCRIPTEN__ )
+  typedef int value_type;
 #elif defined( __GNUC__ )
   typedef _Atomic_word value_type;
-#elif defined( __FreeBSD__ )
-  typedef int value_type;
+#elif defined( __APPLE__ ) || defined( __NetBSD__ ) || defined( __SOLARIS__ )
+  typedef int32_t value_type;
 #elif defined( _WIN32 )
   typedef LONG value_type;
 #endif
@@ -164,17 +170,23 @@ public:
   }
 
 private:
+#if defined( __EMSCRIPTEN__ )
+  std::atomic<value_type> value_;
+#else
   value_type value_;
+#endif
 
   value_type load_impl() const {
 #if defined( __FreeBSD__ )
     return atomic_load_acq_int( &value_ );
+#elif defined( __EMSCRIPTEN__ )
+    return value_.load();
 #else
     value_type const temp = *(value_type volatile*)&value_;
-# if defined( __APPLE__ )
-    OSMemoryBarrier();
-# elif defined( __GNUC__ )
+# if defined( __GNUC__ )
     _GLIBCXX_READ_MEM_BARRIER;
+# elif defined( __APPLE__ )
+    OSMemoryBarrier();
 # elif defined( __NetBSD__ ) || defined( __SOLARIS__ )
     membar_consumer();
 # elif defined( _WIN32 )
@@ -191,11 +203,13 @@ private:
     atomic_store_rel_int( &value_, n );
 #elif defined( _WIN32 )
     InterlockedExchange( &value_, n );
+#elif defined( __EMSCRIPTEN__ )
+    value_.store(n);
 #else
-# if defined( __APPLE__ )
-    OSMemoryBarrier();
-# elif defined( __GNUC__ )
+# if defined( __GNUC__ )
     _GLIBCXX_WRITE_MEM_BARRIER;
+# elif defined( __APPLE__ )
+    OSMemoryBarrier();
 # elif defined( __NetBSD__ ) || defined( __SOLARIS__ )
     membar_producer();
 # elif defined( __INTEL_COMPILER )
@@ -206,10 +220,12 @@ private:
   }
 
   value_type add( value_type n ) {
-#if defined( __APPLE__ )
-    return OSAtomicAdd32( n, &value_ );
+#if defined( __EMSCRIPTEN__ )
+    return value_.fetch_add(n);
 #elif defined( __GNUC__ )
     return GNU_EXCHANGE_AND_ADD( &value_, n ) + n;
+#elif defined( __APPLE__ )
+    return OSAtomicAdd32( n, &value_ );
 #elif defined( __FreeBSD__ )
     return atomic_fetchadd_int( &value_, n ) + n;
 #elif defined( __NetBSD__ )
@@ -222,10 +238,12 @@ private:
   }
 
   value_type pre_dec() {
-#if defined( __APPLE__ )
-    return OSAtomicDecrement32( &value_ );
+#if defined( __EMSCRIPTEN__ )
+    return --value_;
 #elif defined( __GNUC__ )
     return GNU_EXCHANGE_AND_ADD( &value_, -1 ) - 1;
+#elif defined( __APPLE__ )
+    return OSAtomicDecrement32( &value_ );
 #elif defined( __FreeBSD__ )
     return atomic_fetchadd_int( &value_, -1 ) - 1;
 #elif defined( __NetBSD__ )
@@ -238,10 +256,12 @@ private:
   }
 
   value_type pre_inc() {
-#if defined( __APPLE__ )
-    return OSAtomicIncrement32( &value_ );
+#if defined( __EMSCRIPTEN__ )
+    return ++value_;
 #elif defined( __GNUC__ )
     return GNU_EXCHANGE_AND_ADD( &value_, 1 ) + 1;
+#elif defined( __APPLE__ )
+    return OSAtomicIncrement32( &value_ );
 #elif defined( __FreeBSD__ )
     return atomic_fetchadd_int( &value_, 1 ) + 1;
 #elif defined( __NetBSD__ )
@@ -254,10 +274,12 @@ private:
   }
 
   value_type post_dec() {
-#if defined( __APPLE__ )
-    return OSAtomicDecrement32( &value_ ) + 1;
+#if defined( __EMSCRIPTEN__ )
+    return value_--;
 #elif defined( __GNUC__ )
     return GNU_EXCHANGE_AND_ADD( &value_, -1 );
+#elif defined( __APPLE__ )
+    return OSAtomicDecrement32( &value_ ) + 1;
 #elif defined( __FreeBSD__ )
     return atomic_fetchadd_int( &value_, -1 );
 #elif defined( __NetBSD__ )
@@ -270,10 +292,12 @@ private:
   }
 
   value_type post_inc() {
-#if defined( __APPLE__ )
-    return OSAtomicIncrement32( &value_ ) - 1;
+#if defined( __EMSCRIPTEN__ )
+    return value_++;
 #elif defined( __GNUC__ )
     return GNU_EXCHANGE_AND_ADD( &value_, 1 );
+#elif defined( __APPLE__ )
+    return OSAtomicIncrement32( &value_ ) - 1;
 #elif defined( __FreeBSD__ )
     return atomic_fetchadd_int( &value_, 1 );
 #elif defined( __NetBSD__ )

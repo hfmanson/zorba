@@ -2195,7 +2195,7 @@ bool FnAnalyzeStringIterator::nextImpl(
         int    match_start2;
         int    match_end2;
 
-        rx.get_group_start_end(&match_start2, &match_end2);
+        rx.get_group_start_end(&match_start2, &match_end2, 0);
         ZORBA_ASSERT(match_start2 >= 0);
 
         if(is_input_stream && reachedEnd && !instream->eof())
@@ -2437,6 +2437,7 @@ bool StringAnalyzeStringIterator::nextImpl( store::Item_t& result,
   vector<int> g_parents;
   store::Item_t item;
   zstring input, pattern, lib_pattern, flags;
+  bool reachedEnd = false;
 #if STREAM_ANALYZE_STRING
   istream *is;
   istringstream iss;
@@ -2489,9 +2490,10 @@ bool StringAnalyzeStringIterator::nextImpl( store::Item_t& result,
   g_count = regex.get_group_count();
   calc_group_parents( pattern, &g_parents );
 
-  regex.set_string( input.data(), input.size() );
-  while ( regex.next_match() ) {
-    regex.get_group_start_end( &m_start, &m_end );
+  regex.set_string( input.data(), input.size() );  
+
+  while ( regex.next_match(&reachedEnd) ) {
+    regex.get_group_start_end( &m_start, &m_end, 0 );
     if ( m_start > m_end_prev ) {
       add_json_non_match( u_input, m_end_prev, m_start, &item );
       array_items.push_back( item );
