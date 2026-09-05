@@ -99,16 +99,25 @@ static void append_env_var(
     std::vector<zstring>& pathsVector)
 {
   char* dll_path = getenv(env_var_name);
-  char* str_env = std::strtok(dll_path, ";");
-  while (str_env !=NULL)
+  if (dll_path)
   {
-    zstring zorba_env_dir(str_env);
-    if (str_env[strlen(str_env)-1] != '/')
+    char* str_env = std::strtok(dll_path, ";");
+    while (str_env !=NULL)
     {
-      zorba_env_dir.append("/");
+      zstring zorba_env_dir(str_env);
+      if (str_env[strlen(str_env)-1] != '/')
+      {
+        zorba_env_dir.append("/");
+      }
+      pathsVector.push_back(zorba_env_dir);
+      str_env = std::strtok(NULL, ";");
     }
-    pathsVector.push_back(zorba_env_dir);
-    str_env = std::strtok(NULL, ";");
+  }
+  else
+  {
+	// ZORBA_LIB_PATH
+	// ZORBA_URI_PATH
+    //printf("environment variable not found: %s\n", env_var_name);
   }
 }
 #endif
