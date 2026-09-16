@@ -22,6 +22,8 @@
 #include <functional>                   /* for binary_function */
 #include <utility>                      /* for pair */
 
+#include <zorba/config.h>
+
 #ifndef ZORBA_NO_ICU
 # include <unicode/normlzr.h>
 # include <unicode/uchar.h>

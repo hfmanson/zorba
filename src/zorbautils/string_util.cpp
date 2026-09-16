@@ -16,7 +16,12 @@
 #include "stdafx.h"
 
 #include <cstring>
+
+#include <zorba/config.h>
+
+#ifndef ZORBA_NO_ICU
 #include <unicode/stsearch.h>
+#endif /* ZORBA_NO_ICU */
 
 #include "util/unicode_util.h"
 #include "zorbautils/string_util.h"

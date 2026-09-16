@@ -19,6 +19,8 @@
 #include <algorithm>
 #include <cstring>
 
+#include <zorba/config.h>
+
 // ICU
 #ifndef ZORBA_NO_ICU
 #include <unicode/ustring.h>
