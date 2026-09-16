@@ -203,7 +203,7 @@ store::Item_t FragmentXmlLoader::loadXml(
       applyLoadOptions(theLoadProperties, theFragmentStream->ctxt);
 
       // Delete the initial empty input stream
-      xmlFreeInputStream(inputPop(theFragmentStream->ctxt));
+      //xmlFreeInputStream(inputPop(theFragmentStream->ctxt));
 
       // Create the LibXml parser input
       xmlParserInputPtr input = xmlNewInputStream(theFragmentStream->ctxt);
