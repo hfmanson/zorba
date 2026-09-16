@@ -111,7 +111,7 @@ public:
       const zstring& docUri,
       std::istream& xmlStream) = 0;
 
-  static void error( void *ctx, xmlErrorPtr );
+  static void error( void *ctx, const xmlErrorPtr );
 };
 
 

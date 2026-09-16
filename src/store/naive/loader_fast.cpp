@@ -100,7 +100,7 @@ XmlLoader::~XmlLoader()
 /*******************************************************************************
 
 ********************************************************************************/
-void XmlLoader::error(void* ctx, xmlErrorPtr error)
+void XmlLoader::error(void* ctx, const xmlErrorPtr error)
 {
   if ( error->level == XML_ERR_NONE )
     return;
