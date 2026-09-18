@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ConsoleApp1": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "PATH": "c:\\Users\\hfman\\source\\repos\\helloworld\\build\\vcpkg_installed\\x64-windows\\bin;c:\\Users\\hfman\\source\\repos\\zorba\\build\\src\\Debug"
+      }
+    }
+  }
+}

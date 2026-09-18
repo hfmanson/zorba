@@ -466,7 +466,8 @@ XmlNode::XmlNode(
     store::StoreConsts::NodeKind nodeKind)
   :
   theParent(parent),
-  theFlags(0)
+  theFlags(0),
+  theNodeHandle(NULL)
 {
   assert(tree || parent);
   assert(parent == NULL || parent->getTree() != NULL);
@@ -3954,7 +3955,12 @@ AttributeNode::AttributeNode(
 
     throw;
   }
-
+  
+  if (g_facade.createAttributeNode)
+  {
+      theNodeHandle = g_facade.createAttributeNode(theName->getLocalName().c_str(), theName->getNamespace().c_str(), getStringValue().c_str());
+  }
+  
   STORE_TRACE1("Constructed attribute node " << this << " parent = "
               << std::hex << (parent ? (ulong)parent : 0) << " pos = " << pos
               << " tree = " << getTreeId() << ":" << getTree()

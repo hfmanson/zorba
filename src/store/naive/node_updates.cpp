@@ -1391,6 +1391,10 @@ void AttributeNode::replaceValue(UpdReplaceAttrValue& upd)
   else
 #endif
   {
+    if (g_facade.SetStringValue && theNodeHandle)
+    {
+        g_facade.SetStringValue(theNodeHandle, upd.theNewValue.c_str());
+    }
     store::Item_t newValue;
     GET_STORE().getItemFactory()->createUntypedAtomic(newValue, upd.theNewValue);
     theTypedValue.transfer(newValue);

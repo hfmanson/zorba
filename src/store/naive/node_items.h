@@ -50,6 +50,8 @@
 #include "collection_tree_info.h"
 #include "collection.h"
 
+#include "dotnet.h"
+
 // Note: whether the EMBEDED_TYPE is defined or not is done in store_defs.h
 #ifndef EMBEDED_TYPE
 #include "hashmap_nodep.h"
@@ -399,6 +401,7 @@ public:
 protected:
   InternalNode    * theParent;
   uint32_t          theFlags;
+  NodeHandle        theNodeHandle;
 
 private:
 #ifndef TEXT_ORDPATH
@@ -406,12 +409,13 @@ private:
 #endif
 
 protected:
-  XmlNode() : theParent(NULL) { }
+  XmlNode() : theParent(NULL), theNodeHandle(NULL) { }
 
   XmlNode(store::StoreConsts::NodeKind k)
     :
     StructuredItem(),
-    theParent(NULL)
+    theParent(NULL),
+    theNodeHandle(NULL)
   {
     theFlags = (uint32_t)k;
   }
