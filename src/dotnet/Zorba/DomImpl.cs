@@ -1,8 +1,7 @@
-﻿using System.Reflection.Metadata;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Xml.Linq;
 
-namespace ConsoleApp1
+namespace Zorba
 {
     public static class DomImpl
     {
@@ -32,7 +31,7 @@ namespace ConsoleApp1
 
         public static IntPtr CreateElementNode(string localName, string namespaceName)
         {
-            XElement element = new XElement(localName, namespaceName);
+            XElement element = new XElement(XName.Get(localName, namespaceName));
             return GCHandle.ToIntPtr(GCHandle.Alloc(element));
         }
 
@@ -47,7 +46,11 @@ namespace ConsoleApp1
             object? objAttr = GCHandle.FromIntPtr(handle).Target;
             if (objAttr is XAttribute attr)
             {
-                attr.Value = Utf8FromIntPtr(utf8Value);
+                string newValue = Utf8FromIntPtr(utf8Value);
+                if (newValue != attr.Value)
+                {
+                    attr.Value = Utf8FromIntPtr(utf8Value);
+                }
             }
         }
 

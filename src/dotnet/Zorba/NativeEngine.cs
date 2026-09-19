@@ -1,25 +1,6 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
+using System.Xml.Linq;
 
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate IntPtr GetChildrenDelegate(IntPtr nodeHandle);      // returns handle to an array/list
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate IntPtr GetAttributesDelegate(IntPtr nodeHandle);
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate IntPtr GetParentDelegate(IntPtr nodeHandle);
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate IntPtr GetNodeNameDelegate(IntPtr nodeHandle);      // returns pointer to UTF‑8 string
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate IntPtr GetNamespaceUriDelegate(IntPtr nodeHandle);
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate IntPtr GetStringValueDelegate(IntPtr nodeHandle);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void InsertChildDelegate(IntPtr parentHandle, IntPtr childHandle, IntPtr beforeHandle);
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void RemoveChildDelegate(IntPtr parentHandle, IntPtr childHandle);
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void ReplaceChildDelegate(IntPtr parentHandle, IntPtr oldChildHandle, IntPtr newChildHandle);
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public delegate void SetStringValueDelegate(IntPtr nodeHandle, IntPtr utf8Value);
 
@@ -56,18 +37,7 @@ public delegate void AddDelegate(IntPtr container, IntPtr obj);
 [StructLayout(LayoutKind.Sequential)]
 public struct DomFacadeCallbacks
 {
-    public GetChildrenDelegate GetChildren;
-    public GetAttributesDelegate GetAttributes;
-    public GetParentDelegate GetParent;
-    public GetNodeNameDelegate GetNodeName;
-    public GetNamespaceUriDelegate GetNamespaceUri;
-    public GetStringValueDelegate GetStringValue;
-
-    public InsertChildDelegate InsertChild;
-    public RemoveChildDelegate RemoveChild;
-    public ReplaceChildDelegate ReplaceChild;
     public SetStringValueDelegate SetStringValue;
-
     public CreateDocumentNodeDelegate CreateDocumentNode;
     public CreateElementNodeDelegate CreateElementNode;
     public CreateAttributeNodeDelegate CreateAttributeNode;
@@ -77,14 +47,29 @@ public struct DomFacadeCallbacks
     public AddDelegate Add;
 }
 
-internal static class NativeEngine
+public static class NativeEngine
 {
-    [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void SetDomFacade(DomFacadeCallbacks callbacks);
+    public static XDocument? getXDocument()
+    {
+        XDocument? document = null;
+        IntPtr ptr = GetDocument();
+        if (ptr != IntPtr.Zero)
+        {
+            GCHandle gch = GCHandle.FromIntPtr(ptr);
+            document = (XDocument?)gch.Target;
+        }
+        return document;
+    }
 
     [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr RunXQuery(string xquery);
+    public static extern void InitEngine(DomFacadeCallbacks callbacks, string? xmlFile);
 
-    //[DllImport("xquery_engine", CallingConvention = CallingConvention.Cdecl)]
-    //public static extern void SetRootNode(IntPtr rootHandle);
+    [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void ShutdownEngine();
+
+    [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr GetDocument();
+
+    [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void RunXQuery(string xquery);
 }

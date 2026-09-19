@@ -982,6 +982,10 @@ void  FastXmlLoader::endElement(
         nodes[numActualNodes] = currChild;
         currChild->setParent(elemNode);
 
+        if (currChild->getNodeKind() == store::StoreConsts::elementNode && g_facade.Add)
+        {
+            g_facade.Add(elemNode->theNodeHandle, currChild->theNodeHandle);
+        }
         if (currChild->getNodeKind() == store::StoreConsts::elementNode &&
             !loader.theBindingsStack.empty())
         {
