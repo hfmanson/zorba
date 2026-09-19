@@ -3,6 +3,8 @@
 
 #include <zorba/zorba.h>
 #include <zorba/store_manager.h>
+#include <api/unmarshaller.h>
+#include <store/naive/node_items.h>
 
 #include "dotnet.h"
 
@@ -18,7 +20,7 @@ extern "C" EXPORT void SetDomFacade(DomFacadeCallbacksNative callbacks)
 
 namespace zorba
 {
-    static void runxq(const char* xquery)
+    static NodeHandle runxq(const char* xquery)
     {
         void* lStore = StoreManager::getStore();
         Zorba* lZorba = Zorba::getInstance(lStore);
@@ -30,13 +32,16 @@ namespace zorba
         XmlDataManager_t xmlMgr = lZorba->getXmlDataManager();
         Item doc(xmlMgr->parseXML(is));
         dctx->setContextItem(doc);
+        zorba::simplestore::XmlNode* root = reinterpret_cast<zorba::simplestore::XmlNode*>(Unmarshaller::getInternalItem(doc));
+        NodeHandle handle = root->getNodeHandle();
 
-        //lQuery->execute();
-        std::cout << lQuery << std::endl;
+        lQuery->execute();
+        //std::cout << lQuery << std::endl;
+        return handle;
     }
 }
 
-extern "C" EXPORT void RunXQuery(const char* xquery)
+extern "C" EXPORT NodeHandle RunXQuery(const char* xquery)
 {
-    zorba::runxq(xquery);
+    return zorba::runxq(xquery);
 }

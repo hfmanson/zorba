@@ -451,6 +451,8 @@ public:
 
   virtual ~XmlNode();
 
+  NodeHandle getNodeHandle() { return theNodeHandle; }
+
   SYNC_CODE(RCLock* getRCLock() const { return getTree()->getRCLock(); })
 
   void free();

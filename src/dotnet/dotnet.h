@@ -60,7 +60,7 @@ extern "C" {
     };
 
     EXPORT void SetDomFacade(DomFacadeCallbacksNative callbacks);
-    EXPORT void RunXQuery(const char *xquery);
+    EXPORT NodeHandle RunXQuery(const char *xquery);
 
     //EXPORT void SetRootNode(NodeHandle root);
     extern DomFacadeCallbacksNative g_facade;

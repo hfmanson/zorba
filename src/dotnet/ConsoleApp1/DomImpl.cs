@@ -6,7 +6,6 @@ namespace ConsoleApp1
 {
     public static class DomImpl
     {
-        public static XDocument? doc = null;
         public static string Utf8FromIntPtr(IntPtr ptr)
         {
             if (ptr == IntPtr.Zero)
@@ -27,8 +26,7 @@ namespace ConsoleApp1
 
         public static IntPtr CreateDocumentNode()
         {
-            //XDocument doc = new XDocument();
-            doc = new XDocument();
+            XDocument doc = new XDocument();
             return GCHandle.ToIntPtr(GCHandle.Alloc(doc));
         }
 

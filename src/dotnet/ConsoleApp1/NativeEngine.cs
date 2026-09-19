@@ -83,7 +83,7 @@ internal static class NativeEngine
     public static extern void SetDomFacade(DomFacadeCallbacks callbacks);
 
     [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void RunXQuery(string xquery);
+    public static extern IntPtr RunXQuery(string xquery);
 
     //[DllImport("xquery_engine", CallingConvention = CallingConvention.Cdecl)]
     //public static extern void SetRootNode(IntPtr rootHandle);
