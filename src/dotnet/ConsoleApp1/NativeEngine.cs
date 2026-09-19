@@ -22,6 +22,10 @@ public delegate void RemoveChildDelegate(IntPtr parentHandle, IntPtr childHandle
 public delegate void ReplaceChildDelegate(IntPtr parentHandle, IntPtr oldChildHandle, IntPtr newChildHandle);
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public delegate void SetStringValueDelegate(IntPtr nodeHandle, IntPtr utf8Value);
+
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+public delegate IntPtr CreateDocumentNodeDelegate();
+
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public delegate IntPtr CreateElementNodeDelegate(
     [MarshalAs(UnmanagedType.LPStr)] string localName,
@@ -47,10 +51,7 @@ public delegate IntPtr CreateProcessingInstructionNodeDelegate(
     [MarshalAs(UnmanagedType.LPStr)] string data);
 
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void AppendChildDelegate(IntPtr parent, IntPtr child);
-
-[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-public delegate void AppendAttributeDelegate(IntPtr element, IntPtr attribute);
+public delegate void AddDelegate(IntPtr container, IntPtr obj);
 
 [StructLayout(LayoutKind.Sequential)]
 public struct DomFacadeCallbacks
@@ -66,14 +67,14 @@ public struct DomFacadeCallbacks
     public RemoveChildDelegate RemoveChild;
     public ReplaceChildDelegate ReplaceChild;
     public SetStringValueDelegate SetStringValue;
+
+    public CreateDocumentNodeDelegate CreateDocumentNode;
     public CreateElementNodeDelegate CreateElementNode;
     public CreateAttributeNodeDelegate CreateAttributeNode;
     public CreateTextNodeDelegate CreateTextNode;
     public CreateCommentNodeDelegate CreateCommentNode;
     public CreateProcessingInstructionNodeDelegate CreateProcessingInstructionNode;
-
-    public AppendChildDelegate AppendChild;
-    public AppendAttributeDelegate AppendAttribute;
+    public AddDelegate Add;
 }
 
 internal static class NativeEngine

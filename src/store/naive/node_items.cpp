@@ -3956,9 +3956,9 @@ AttributeNode::AttributeNode(
     throw;
   }
   
-  if (g_facade.createAttributeNode)
+  if (g_facade.CreateAttributeNode)
   {
-      theNodeHandle = g_facade.createAttributeNode(theName->getLocalName().c_str(), theName->getNamespace().c_str(), getStringValue().c_str());
+      theNodeHandle = g_facade.CreateAttributeNode(theName->getLocalName().c_str(), theName->getNamespace().c_str(), getStringValue().c_str());
   }
   
   STORE_TRACE1("Constructed attribute node " << this << " parent = "

@@ -26,14 +26,14 @@ extern "C" {
     typedef void (*ReplaceChildFn)(NodeHandle parent, NodeHandle oldChild, NodeHandle newChild);
     typedef void (*SetStringValueFn)(NodeHandle node, const char* utf8Value);
 
-    typedef NodeHandle(*CreateElementNodeFn)(const char* localName, const char* namespaceUri);
-    typedef NodeHandle(*CreateAttributeNodeFn)(const char* localName, const char* namespaceUri, const char* value);
-    typedef NodeHandle(*CreateTextNodeFn)(const char* value);
-    typedef NodeHandle(*CreateCommentNodeFn)(const char* value);
-    typedef NodeHandle(*CreateProcessingInstructionNodeFn)(const char* target, const char* data);
+    typedef NodeHandle (*CreateDocumentNodeFn)();
+    typedef NodeHandle (*CreateElementNodeFn)(const char* localName, const char* namespaceUri);
+    typedef NodeHandle (*CreateAttributeNodeFn)(const char* localName, const char* namespaceUri, const char* value);
+    typedef NodeHandle (*CreateTextNodeFn)(const char* value);
+    typedef NodeHandle (*CreateCommentNodeFn)(const char* value);
+    typedef NodeHandle (*CreateProcessingInstructionNodeFn)(const char* target, const char* data);
 
-    typedef void (*AppendChildFn)(NodeHandle parent, NodeHandle child);
-    typedef void (*AppendAttributeFn)(NodeHandle element, NodeHandle attribute);
+    typedef void (*AddFn)(NodeHandle container, NodeHandle obj);
 
     struct DomFacadeCallbacksNative
     {
@@ -49,14 +49,14 @@ extern "C" {
         ReplaceChildFn     ReplaceChild;
         SetStringValueFn   SetStringValue;
 
-        CreateElementNodeFn createElementNode;
-        CreateAttributeNodeFn createAttributeNode;
-        CreateTextNodeFn createTextNode;
-        CreateCommentNodeFn createCommentNode;
-        CreateProcessingInstructionNodeFn createProcessingInstructionNode;
+        CreateDocumentNodeFn CreateDocumentNode;
+        CreateElementNodeFn CreateElementNode;
+        CreateAttributeNodeFn CreateAttributeNode;
+        CreateTextNodeFn CreateTextNode;
+        CreateCommentNodeFn CreateCommentNode;
+        CreateProcessingInstructionNodeFn CreateProcessingInstructionNode;
 
-        AppendChildFn appendChild;
-        AppendAttributeFn appendAttribute;
+        AddFn Add;
     };
 
     EXPORT void SetDomFacade(DomFacadeCallbacksNative callbacks);

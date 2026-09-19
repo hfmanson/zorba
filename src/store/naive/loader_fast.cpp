@@ -514,6 +514,10 @@ void FastXmlLoader::startDocument(void * ctx)
   {
     DocumentNode* docNode = GET_STORE().getNodeFactory().createDocumentNode();
 
+    if (g_facade.CreateDocumentNode)
+    {
+      docNode->theNodeHandle = g_facade.CreateDocumentNode();
+    }
     loader.setRoot(docNode);
     loader.theNodeStack.push(docNode);
     loader.theNodeStack.push(NULL);
@@ -596,7 +600,13 @@ void FastXmlLoader::endDocument(void * ctx)
       currChild = nodeStack[i];
       children[numActualChildren] = currChild;
       if (loader.theLoadProperties.getCreateDocParentLink())
-        currChild->setParent(docNode);
+      {
+          currChild->setParent(docNode);
+          if (g_facade.Add)
+          {
+              g_facade.Add(docNode->theNodeHandle, currChild->theNodeHandle);
+          }
+      }
       ++numActualChildren;
     }
 
@@ -677,15 +687,20 @@ void FastXmlLoader::startElement(
 
     // Construct node name
     store::Item_t nodeName;
-    qnpool.insert(nodeName,
-                  reinterpret_cast<const char*>(uri),
-                  reinterpret_cast<const char*>(prefix),
-                  reinterpret_cast<const char*>(lname));
+    const char* chUri = reinterpret_cast<const char*>(uri);
+    const char* chPrefix = reinterpret_cast<const char*>(prefix);
+    const char* chLname = reinterpret_cast<const char*>(lname);
+
+    qnpool.insert(nodeName, chUri, chPrefix, chLname);
     
     // Create the element node and push it to the node stack
     ElementNode* elemNode = nfactory.createElementNode(nodeName,
                                                        numBindings,
                                                        numAttributes);
+    if (g_facade.CreateElementNode)
+    {
+        elemNode->theNodeHandle = g_facade.CreateElementNode(chLname, chUri ? chUri : "");
+    }
     if (nodeStack.empty())
       loader.setRoot(elemNode);
     
@@ -813,6 +828,15 @@ void FastXmlLoader::startElement(
         GET_STORE().getItemFactory()->createUntypedAtomic(typedValue, value);
 
         AttributeNode* attrNode = nfactory.createAttributeNode(qname);
+        if (g_facade.CreateAttributeNode)
+        {
+          zstring value2(valueBegin, valueEnd);
+          attrNode->theNodeHandle = g_facade.CreateAttributeNode(lname, uri ? uri : "", value2.c_str());
+          if (g_facade.Add)
+          {
+              g_facade.Add(elemNode->theNodeHandle, attrNode->theNodeHandle);
+          }
+        }
         attrNode->theParent = elemNode;
         attrNode->setId(loader.theTree, &loader.theOrdPath);
         attrNode->theTypedValue.transfer(typedValue);

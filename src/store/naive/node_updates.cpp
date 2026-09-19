@@ -153,6 +153,10 @@ void XmlNode::attach(InternalNode* parent, csize pos)
     setOrdPath(parent, false, pos, store::StoreConsts::attributeNode);
 
     elemParent->insertAttr(this, pos);
+    if (g_facade.Add)
+    {
+      g_facade.Add(elemParent->theNodeHandle, theNodeHandle);
+    }
 
     break;
   }
