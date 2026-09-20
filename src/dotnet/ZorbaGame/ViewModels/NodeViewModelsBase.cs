@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.Metadata;
 using System.Xml.Linq;
 using Zorba;
 
@@ -9,6 +10,8 @@ namespace ZorbaGame.ViewModels
 {
     public abstract class NodeViewModelsBase
     {
+        private IntPtr docItemHandle;
+        XDocument? document;
         private readonly Dictionary<XAttribute, NodeViewModelBase> _attributeModels = new Dictionary<XAttribute, NodeViewModelBase>();
 
         public abstract XDocument LoadGame(Canvas game, int level);
@@ -21,34 +24,26 @@ namespace ZorbaGame.ViewModels
             }
         }
 
-        public static void InitEngine(string? xmlFile)
-        {
-            //Console.WriteLine("Current directory: " + Environment.CurrentDirectory);
-            //Console.WriteLine("PATH: " + Environment.GetEnvironmentVariable("PATH"));
-            DomFacadeCallbacks facade = new DomFacadeCallbacks
-            {
-                CreateDocumentNode = DomImpl.CreateDocumentNode,
-                CreateElementNode = DomImpl.CreateElementNode,
-                CreateAttributeNode = DomImpl.CreateAttributeNode,
-                SetStringValue = DomImpl.SetStringValue,
-                Add = DomImpl.Add
-            };
-
-            NativeEngine.InitEngine(facade, xmlFile);
-        }
-        public static void ShutdownEngine()
-        {
-            NativeEngine.ShutdownEngine();
-        }
-
         protected XDocument LoadXML(string XMLFile)
         {
             var path = Path.Combine(AppContext.BaseDirectory, "Assets", XMLFile);
-            //XDocument document = XDocument.Load(path);
-            InitEngine(path);
-            XDocument document = NativeEngine.getXDocument();
-            document.Changed += Document_Changed; ;
+            docItemHandle = NativeEngine.LoadXML(XMLFile);
+            document = NativeEngine.GetXDocument(docItemHandle);
+            document?.Changed += Document_Changed;
             return document;
+        }
+
+        public void FreeXML()
+        {
+            document?.Changed -= Document_Changed;
+            document = null;
+            NativeEngine.FreeXML(docItemHandle);
+            docItemHandle = IntPtr.Zero;
+        }
+
+        public void RunXQuery(string xquery)
+        {
+            NativeEngine.RunXQuery(xquery, docItemHandle);
         }
 
         protected void AddAttributeModel(NodeViewModelBase model, XElement element)

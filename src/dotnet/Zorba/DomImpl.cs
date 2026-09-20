@@ -63,5 +63,10 @@ namespace Zorba
                 container.Add(obj);
             }
         }
+
+        public static void FreeHandle(IntPtr handle)
+        {
+            GCHandle.FromIntPtr(handle).Free();
+        }
     }
 }

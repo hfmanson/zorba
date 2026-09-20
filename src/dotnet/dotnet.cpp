@@ -13,39 +13,48 @@ using namespace std;
 std::string getCurrentDirectoryFileURL();
 
 DomFacadeCallbacksNative g_facade;
-void* lStore;
-Zorba* lZorba;
+void* lStore = NULL;
+Zorba* lZorba = NULL;
 StaticContext_t sctx;
-Item* docItem = NULL;
 
-extern "C" ZORBA_DLL_PUBLIC void InitEngine(DomFacadeCallbacksNative callbacks, const char* xmlFile)
+extern "C" ZORBA_DLL_PUBLIC void InitEngine(DomFacadeCallbacksNative callbacks)
 {
+    ShutdownEngine();
     g_facade = callbacks;
     lStore = StoreManager::getStore();
     lZorba = Zorba::getInstance(lStore);
     sctx = lZorba->createStaticContext();
     sctx->setBaseURI(getCurrentDirectoryFileURL());
-
-    if (xmlFile)
-    {
-        ifstream is(xmlFile);
-        XmlDataManager_t xmlMgr = lZorba->getXmlDataManager();
-        docItem = new Item(xmlMgr->parseXML(is));
-    }
 }
 
 extern "C" ZORBA_DLL_PUBLIC void ShutdownEngine()
 {
-    delete docItem;
     sctx = nullptr;
-    lZorba->shutdown();
-    StoreManager::shutdownStore(lStore);
-
-    lZorba = nullptr;
-    lStore = nullptr;
+    if (lZorba)
+    {
+        lZorba->shutdown();
+        lZorba = nullptr;
+    }
+    if (lStore)
+    {
+        StoreManager::shutdownStore(lStore);
+        lStore = nullptr;
+    }
 }
 
-extern "C" ZORBA_DLL_PUBLIC void RunXQuery(const char* xquery)
+extern "C" ZORBA_DLL_PUBLIC void* LoadXML(const char* xmlFile)
+{
+    ifstream is(xmlFile);
+    XmlDataManager_t xmlMgr = lZorba->getXmlDataManager();
+    return new Item(xmlMgr->parseXML(is));
+}
+
+extern "C" ZORBA_DLL_PUBLIC void FreeXML(void* docItem)
+{
+        delete (Item*)docItem;
+}
+
+extern "C" ZORBA_DLL_PUBLIC void RunXQuery(const char* xquery, void* docItem)
 {
     XQuery_t lQuery = lZorba->compileQuery(xquery, sctx);
     if (docItem)
@@ -54,17 +63,12 @@ extern "C" ZORBA_DLL_PUBLIC void RunXQuery(const char* xquery)
         dctx->setContextItem(*(Item*)docItem);
     }
 
-    //lQuery->execute();
-    std::cout << lQuery << std::endl;
+    lQuery->execute();
+    //std::cout << lQuery << std::endl;
 }
 
-extern "C" ZORBA_DLL_PUBLIC NodeHandle GetDocument()
+extern "C" ZORBA_DLL_PUBLIC NodeHandle GetXDocumentHandle(void* docItem)
 {
-    NodeHandle nodeHandle = NULL;
-    if (docItem)
-    {
-        zorba::simplestore::XmlNode* root = reinterpret_cast<zorba::simplestore::XmlNode*>(Unmarshaller::getInternalItem(*(Item*)docItem));
-        nodeHandle = root->getNodeHandle();
-    }
-    return nodeHandle;
+    zorba::simplestore::XmlNode* root = reinterpret_cast<zorba::simplestore::XmlNode*>(Unmarshaller::getInternalItem(*(Item*)docItem));
+    return root->getNodeHandle();
 }

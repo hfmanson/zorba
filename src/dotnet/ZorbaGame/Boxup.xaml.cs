@@ -15,7 +15,7 @@ namespace ZorbaGame
 
         private XDocument _document;
 
-        private NodeViewModelsBase _NodeViewModels;
+        private NodeViewModelsBase? _NodeViewModels;
 
         private int _level;
 
@@ -98,6 +98,10 @@ return
         public void loadLevel()
         {
             game.Children.Clear();
+            if (_NodeViewModels != null)
+            {
+                _NodeViewModels.FreeXML();
+            }
             _NodeViewModels = new BoxNodeViewModels();
             _document = _NodeViewModels.LoadGame(game, _level);
             XElement? root = _document.Root;
@@ -116,9 +120,14 @@ return
             }
         }
 
+        public void cleanUp()
+        {
+            _NodeViewModels.FreeXML();
+        }
+
         private void boxupMove(int dx, int dy)
         {
-            NativeEngine.RunXQuery($"import module namespace boxup=\"http://mansoft.nl/boxup\" at 'boxup.xqm'; boxup:check-move(., {dx}, {dy})");
+            _NodeViewModels.RunXQuery($"import module namespace boxup=\"http://mansoft.nl/boxup\" at 'boxup.xqm'; boxup:check-move(., {dx}, {dy})");
         }
 
 

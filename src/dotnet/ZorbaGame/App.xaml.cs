@@ -10,7 +10,7 @@ namespace ZorbaGame
     /// </summary>
     public partial class App : Application
     {
-        private Window? _window;
+        private Boxup? _window;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -27,6 +27,7 @@ namespace ZorbaGame
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
+            NativeEngine.InitEngine();
             _window = new Boxup();
             _window.Closed += _window_Closed;
             _window.Activate();
@@ -34,7 +35,8 @@ namespace ZorbaGame
 
         private void _window_Closed(object sender, WindowEventArgs args)
         {
-            ZorbaGame.ViewModels.BoxNodeViewModels.ShutdownEngine();
+            _window?.cleanUp();
+            NativeEngine.ShutdownEngine();
         }
     }
 }

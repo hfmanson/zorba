@@ -921,6 +921,10 @@ void XmlNode::destroyInternal(bool removeType)
   if (haveReference())
     GET_STORE().unregisterReferenceToUnusedNode(this);
 
+  if (g_facade.FreeHandle && theNodeHandle)
+  {
+      g_facade.FreeHandle(theNodeHandle);
+  }
   delete this;
 }
 

@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Xml.Linq;
+using Zorba;
 
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public delegate void SetStringValueDelegate(IntPtr nodeHandle, IntPtr utf8Value);
@@ -34,6 +35,9 @@ public delegate IntPtr CreateProcessingInstructionNodeDelegate(
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 public delegate void AddDelegate(IntPtr container, IntPtr obj);
 
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+public delegate void FreeHandleDelegate(IntPtr handle);
+
 [StructLayout(LayoutKind.Sequential)]
 public struct DomFacadeCallbacks
 {
@@ -45,31 +49,52 @@ public struct DomFacadeCallbacks
     public CreateCommentNodeDelegate CreateCommentNode;
     public CreateProcessingInstructionNodeDelegate CreateProcessingInstructionNode;
     public AddDelegate Add;
+    public FreeHandleDelegate FreeHandle;
 }
 
 public static class NativeEngine
 {
-    public static XDocument? getXDocument()
+    public static XDocument? GetXDocument(IntPtr docItemHandle)
     {
         XDocument? document = null;
-        IntPtr ptr = GetDocument();
-        if (ptr != IntPtr.Zero)
+        IntPtr docHandle = GetXDocumentHandle(docItemHandle);
+        if (docHandle != IntPtr.Zero)
         {
-            GCHandle gch = GCHandle.FromIntPtr(ptr);
+            GCHandle gch = GCHandle.FromIntPtr(docHandle);
             document = (XDocument?)gch.Target;
         }
         return document;
     }
 
+    public static void InitEngine()
+    {
+        DomFacadeCallbacks facade = new DomFacadeCallbacks
+        {
+            CreateDocumentNode = DomImpl.CreateDocumentNode,
+            CreateElementNode = DomImpl.CreateElementNode,
+            CreateAttributeNode = DomImpl.CreateAttributeNode,
+            SetStringValue = DomImpl.SetStringValue,
+            Add = DomImpl.Add,
+            FreeHandle = DomImpl.FreeHandle
+        };
+        InitEngine(facade);
+    }
+
     [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void InitEngine(DomFacadeCallbacks callbacks, string? xmlFile);
+    public static extern void InitEngine(DomFacadeCallbacks callbacks);
 
     [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
     public static extern void ShutdownEngine();
 
     [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr GetDocument();
+    public static extern IntPtr GetXDocumentHandle(IntPtr docHandle);
 
     [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void RunXQuery(string xquery);
+    public static extern IntPtr LoadXML(string xmlFile);
+
+    [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void FreeXML(IntPtr docItemHandle);
+
+    [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void RunXQuery(string xquery, IntPtr docHandle);
 }
