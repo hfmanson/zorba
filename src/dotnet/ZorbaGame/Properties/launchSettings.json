@@ -1,0 +1,15 @@
+{
+  "profiles": {
+    "ZorbaGame (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "ZorbaGame (Unpackaged)": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\hfman\\source\\repos\\zorba\\build",
+      "environmentVariables": {
+        "PATH": "c:\\Users\\hfman\\source\\repos\\helloworld\\build\\vcpkg_installed\\x64-windows\\bin;c:\\Users\\hfman\\source\\repos\\zorba\\build\\src\\Debug"
+      },
+      "debugEngines": "managed,native"
+    }
+  }
+}
