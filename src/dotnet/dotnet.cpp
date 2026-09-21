@@ -45,14 +45,23 @@ extern "C" ZORBA_DLL_PUBLIC void ShutdownEngine()
     }
 }
 
-extern "C" ZORBA_DLL_PUBLIC void* LoadXML(const char* xmlFile)
+extern "C" ZORBA_DLL_PUBLIC void* LoadXML(const char* xmlFile, bool validate)
 {
     ifstream is(xmlFile);
     XmlDataManager_t xmlMgr = lZorba->getXmlDataManager();
-    Item doc(xmlMgr->parseXML(is));
-    Item validated;
-    bool b = sctx->validate(doc, validated);
-    return new Item(validated);
+    Item* result = nullptr;
+    if (validate)
+    {
+        Item doc(xmlMgr->parseXML(is));
+        Item validated;
+        bool b = sctx->validate(doc, validated);
+        result = new Item(validated);
+    }
+    else
+    {
+        result = new Item((xmlMgr->parseXML(is)));
+    }
+    return result;
 }
 
 extern "C" ZORBA_DLL_PUBLIC void FreeXML(void* docItem)

@@ -39,7 +39,7 @@ extern "C" {
 
     ZORBA_DLL_PUBLIC void InitEngine(DomFacadeCallbacksNative callbacks, const char* prolog);
     ZORBA_DLL_PUBLIC void ShutdownEngine();
-    ZORBA_DLL_PUBLIC void* LoadXML(const char* xmlFile);
+    ZORBA_DLL_PUBLIC void* LoadXML(const char* xmlFile, bool validate);
     ZORBA_DLL_PUBLIC void FreeXML(void* docItemHandle);
     ZORBA_DLL_PUBLIC char* RunXQuery(const char* xquery, void* docItemHandle);
     ZORBA_DLL_PUBLIC void FreeString(char* p);

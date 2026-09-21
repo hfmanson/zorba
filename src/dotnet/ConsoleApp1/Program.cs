@@ -1,10 +1,10 @@
 ﻿using System.Xml.Linq;
 
 NativeEngine.InitEngine("import schema namespace boxup=\"http://mansoft.nl/boxup\" at \"boxup.xsd\";");
-//Test.Test1();
-//Test.Test2();
-//Test.Test3();
-//Test.Test4();
+Test.Test1();
+Test.Test2();
+Test.Test3();
+Test.Test4();
 Test.boxupTest();
 NativeEngine.ShutdownEngine();
 
@@ -20,7 +20,7 @@ public class Test
 
     public static void _boxup(string xmlfile)
     {
-        IntPtr docItemHandle = NativeEngine.LoadXML(xmlfile);
+        IntPtr docItemHandle = NativeEngine.LoadXML(xmlfile, true);
         XDocument? doc = NativeEngine.GetXDocument(docItemHandle);
         if (doc != null)
         {
@@ -37,21 +37,21 @@ public class Test
     public static void boxupTest()
     {
         _boxup("boxup1.xml");
-        //_boxup("boxup2.xml");
-        //_boxup("boxup3.xml");
-        //_boxup("boxup4.xml");
-        //_boxup("boxup5.xml");
+        _boxup("boxup2.xml");
+        _boxup("boxup3.xml");
+        _boxup("boxup4.xml");
+        _boxup("boxup5.xml");
     }
 
     public static void Test1()
     {
-        IntPtr docItemHandle = NativeEngine.LoadXML("boxup1.xml");
-        Console.WriteLine(NativeEngine.XQuery("data(boxup:boxup/@rows) eq 3", docItemHandle));
+        IntPtr docItemHandle = NativeEngine.LoadXML("henri.xml", false);
+        Console.WriteLine(NativeEngine.XQuery(".", docItemHandle));
         NativeEngine.FreeXML(docItemHandle);
     }
     public static void Test2()
     {
-        IntPtr docItemHandle = NativeEngine.LoadXML("henri.xml");
+        IntPtr docItemHandle = NativeEngine.LoadXML("henri.xml", false);
         XDocument? doc = NativeEngine.GetXDocument(docItemHandle);
         NativeEngine.XQuery("replace value of node root/@henri with \"anders\"", docItemHandle);
         Console.WriteLine(doc);
@@ -59,7 +59,7 @@ public class Test
     }
     public static void Test3()
     {
-        IntPtr docItemHandle = NativeEngine.LoadXML("henri.xml");
+        IntPtr docItemHandle = NativeEngine.LoadXML("henri.xml", false);
         XDocument? doc = NativeEngine.GetXDocument(docItemHandle);
         NativeEngine.XQuery("insert node attribute larie { \"koek\" } into root", docItemHandle);
         Console.WriteLine(doc);

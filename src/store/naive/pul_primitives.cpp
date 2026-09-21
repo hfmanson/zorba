@@ -45,7 +45,7 @@ namespace zorba {
 
 namespace simplestore {
 
-#if 1
+#if 0
 #define TRACE(msg) std::cout << msg << std::endl << std::endl;
 #else
 #define TRACE(msg)

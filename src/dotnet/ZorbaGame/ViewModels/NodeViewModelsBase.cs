@@ -27,7 +27,7 @@ namespace ZorbaGame.ViewModels
         protected XDocument LoadXML(string XMLFile)
         {
             var path = Path.Combine(AppContext.BaseDirectory, "Assets", XMLFile);
-            docItemHandle = NativeEngine.LoadXML(XMLFile);
+            docItemHandle = NativeEngine.LoadXML(XMLFile, true);
             document = NativeEngine.GetXDocument(docItemHandle);
             document?.Changed += Document_Changed;
             return document;

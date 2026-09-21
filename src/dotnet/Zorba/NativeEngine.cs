@@ -102,7 +102,7 @@ public static class NativeEngine
     public static extern IntPtr GetXDocumentHandle(IntPtr docHandle);
 
     [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr LoadXML(string xmlFile);
+    public static extern IntPtr LoadXML(string xmlFile, bool validate);
 
     [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
     public static extern void FreeXML(IntPtr docItemHandle);
