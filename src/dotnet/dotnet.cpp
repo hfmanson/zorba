@@ -17,7 +17,7 @@ void* lStore = NULL;
 Zorba* lZorba = NULL;
 StaticContext_t sctx;
 
-extern "C" ZORBA_DLL_PUBLIC void InitEngine(DomFacadeCallbacksNative callbacks)
+extern "C" ZORBA_DLL_PUBLIC void InitEngine(DomFacadeCallbacksNative callbacks, const char* prolog)
 {
     ShutdownEngine();
     g_facade = callbacks;
@@ -25,6 +25,9 @@ extern "C" ZORBA_DLL_PUBLIC void InitEngine(DomFacadeCallbacksNative callbacks)
     lZorba = Zorba::getInstance(lStore);
     sctx = lZorba->createStaticContext();
     sctx->setBaseURI(getCurrentDirectoryFileURL());
+    Zorba_CompilerHints_t hints;
+    zstring zstr(prolog);
+    sctx->loadProlog(zstr.str(), hints);
 }
 
 extern "C" ZORBA_DLL_PUBLIC void ShutdownEngine()
@@ -46,15 +49,18 @@ extern "C" ZORBA_DLL_PUBLIC void* LoadXML(const char* xmlFile)
 {
     ifstream is(xmlFile);
     XmlDataManager_t xmlMgr = lZorba->getXmlDataManager();
-    return new Item(xmlMgr->parseXML(is));
+    Item doc(xmlMgr->parseXML(is));
+    Item validated;
+    bool b = sctx->validate(doc, validated);
+    return new Item(validated);
 }
 
 extern "C" ZORBA_DLL_PUBLIC void FreeXML(void* docItem)
 {
-        delete (Item*)docItem;
+    delete (Item*)docItem;
 }
 
-extern "C" ZORBA_DLL_PUBLIC void RunXQuery(const char* xquery, void* docItem)
+extern "C" ZORBA_DLL_PUBLIC char* RunXQuery(const char* xquery, void* docItem)
 {
     XQuery_t lQuery = lZorba->compileQuery(xquery, sctx);
     if (docItem)
@@ -63,8 +69,27 @@ extern "C" ZORBA_DLL_PUBLIC void RunXQuery(const char* xquery, void* docItem)
         dctx->setContextItem(*(Item*)docItem);
     }
 
-    lQuery->execute();
-    //std::cout << lQuery << std::endl;
+
+    char* buf = nullptr;
+    if (lQuery->isUpdating())
+    {
+        lQuery->execute();
+    }
+    else
+    {
+        std::stringstream ss;
+        ss << lQuery << std::endl;
+
+        std::string s = ss.str();
+        buf = new char[s.size() + 1];
+        memcpy(buf, s.c_str(), s.size() + 1);
+    }
+    return buf;
+}
+
+extern "C" ZORBA_DLL_PUBLIC void FreeString(char* p)
+{
+    delete[]p;
 }
 
 extern "C" ZORBA_DLL_PUBLIC NodeHandle GetXDocumentHandle(void* docItem)

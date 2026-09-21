@@ -37,11 +37,12 @@ extern "C" {
         FreeHandleFn FreeHandle;
     };
 
-    ZORBA_DLL_PUBLIC void InitEngine(DomFacadeCallbacksNative callbacks);
+    ZORBA_DLL_PUBLIC void InitEngine(DomFacadeCallbacksNative callbacks, const char* prolog);
     ZORBA_DLL_PUBLIC void ShutdownEngine();
     ZORBA_DLL_PUBLIC void* LoadXML(const char* xmlFile);
     ZORBA_DLL_PUBLIC void FreeXML(void* docItemHandle);
-    ZORBA_DLL_PUBLIC void RunXQuery(const char* xquery, void* docItemHandle);
+    ZORBA_DLL_PUBLIC char* RunXQuery(const char* xquery, void* docItemHandle);
+    ZORBA_DLL_PUBLIC void FreeString(char* p);
     ZORBA_DLL_PUBLIC NodeHandle GetXDocumentHandle(void* docItemHandle);
     extern DomFacadeCallbacksNative g_facade;
 }

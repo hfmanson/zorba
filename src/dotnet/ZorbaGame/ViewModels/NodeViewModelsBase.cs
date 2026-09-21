@@ -43,7 +43,7 @@ namespace ZorbaGame.ViewModels
 
         public void RunXQuery(string xquery)
         {
-            NativeEngine.RunXQuery(xquery, docItemHandle);
+            NativeEngine.XQuery(xquery, docItemHandle);
         }
 
         protected void AddAttributeModel(NodeViewModelBase model, XElement element)

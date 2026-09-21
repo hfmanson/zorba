@@ -1947,6 +1947,10 @@ DocumentNode::DocumentNode()
   :
   InternalNode(store::StoreConsts::documentNode)
 {
+  if (g_facade.CreateDocumentNode)
+  {
+    theNodeHandle = g_facade.CreateDocumentNode();
+  }
   STORE_TRACE1("Loaded doc node " << this);
 }
 
@@ -1979,6 +1983,10 @@ DocumentNode::DocumentNode(
   theBaseUri(baseUri),
   theDocUri(docUri)
 {
+  if (g_facade.CreateDocumentNode)
+  {
+    theNodeHandle = g_facade.CreateDocumentNode();
+  }
   STORE_TRACE1("{\nConstructing doc node " << this << " tree = "
               << getTreeId() << ":" << getTree()
               << " doc uri = " << docUri);
@@ -2337,6 +2345,14 @@ ElementNode::ElementNode(
     }
 
     throw;
+  }
+  if (g_facade.CreateElementNode)
+  {
+      theNodeHandle = g_facade.CreateElementNode(theName->getLocalName().c_str(), theName->getNamespace().c_str());
+      if (g_facade.Add && parent && parent->theNodeHandle)
+      {
+          g_facade.Add(parent->theNodeHandle, theNodeHandle);
+      }
   }
 
   STORE_TRACE1("Constructed element node " << this << " parent = "
@@ -3963,6 +3979,10 @@ AttributeNode::AttributeNode(
   if (g_facade.CreateAttributeNode)
   {
       theNodeHandle = g_facade.CreateAttributeNode(theName->getLocalName().c_str(), theName->getNamespace().c_str(), getStringValue().c_str());
+      if (g_facade.Add && parent && parent->theNodeHandle)
+      {
+          g_facade.Add(parent->theNodeHandle, theNodeHandle);
+      }
   }
   
   STORE_TRACE1("Constructed attribute node " << this << " parent = "

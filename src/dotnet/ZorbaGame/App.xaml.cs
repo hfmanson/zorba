@@ -27,7 +27,7 @@ namespace ZorbaGame
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            NativeEngine.InitEngine();
+            NativeEngine.InitEngine("import schema namespace boxup=\"http://mansoft.nl/boxup\" at \"boxup.xsd\"; import module namespace boxmod=\"http://mansoft.nl/boxmod\" at 'boxup.xqm';");
             _window = new Boxup();
             _window.Closed += _window_Closed;
             _window.Activate();

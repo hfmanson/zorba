@@ -514,10 +514,6 @@ void FastXmlLoader::startDocument(void * ctx)
   {
     DocumentNode* docNode = GET_STORE().getNodeFactory().createDocumentNode();
 
-    if (g_facade.CreateDocumentNode)
-    {
-      docNode->theNodeHandle = g_facade.CreateDocumentNode();
-    }
     loader.setRoot(docNode);
     loader.theNodeStack.push(docNode);
     loader.theNodeStack.push(NULL);

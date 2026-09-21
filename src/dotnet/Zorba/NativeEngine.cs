@@ -66,7 +66,7 @@ public static class NativeEngine
         return document;
     }
 
-    public static void InitEngine()
+    public static void InitEngine(string prolog)
     {
         DomFacadeCallbacks facade = new DomFacadeCallbacks
         {
@@ -77,11 +77,23 @@ public static class NativeEngine
             Add = DomImpl.Add,
             FreeHandle = DomImpl.FreeHandle
         };
-        InitEngine(facade);
+        InitEngine(facade, prolog);
+    }
+    public static string? XQuery(string xquery, IntPtr docHandle)
+    {
+        string? result = null;
+
+        IntPtr ptr = RunXQuery(xquery, docHandle);
+        if (ptr != IntPtr.Zero)
+        {
+            result = DomImpl.Utf8FromIntPtr(ptr);
+            FreeString(ptr);
+        }
+        return result;
     }
 
     [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void InitEngine(DomFacadeCallbacks callbacks);
+    public static extern void InitEngine(DomFacadeCallbacks callbacks, string prolog);
 
     [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
     public static extern void ShutdownEngine();
@@ -96,5 +108,8 @@ public static class NativeEngine
     public static extern void FreeXML(IntPtr docItemHandle);
 
     [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void RunXQuery(string xquery, IntPtr docHandle);
+    public static extern IntPtr RunXQuery(string xquery, IntPtr docHandle);
+
+    [DllImport("zorba_simplestore", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void FreeString(IntPtr p);
 }

@@ -49,7 +49,7 @@ namespace Zorba
                 string newValue = Utf8FromIntPtr(utf8Value);
                 if (newValue != attr.Value)
                 {
-                    attr.Value = Utf8FromIntPtr(utf8Value);
+                    attr.Value = newValue;
                 }
             }
         }
