@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>58959cb8-6eec-4e9d-a5d2-4d1681ac5020</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>cba0a357-008b-482c-81ad-8841bc526d28</UniqueIdentifier>
+      <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
+    </Filter>
+    <Filter Include="DLLs">
+      <UniqueIdentifier>{1afa42db-39d4-4a3e-af14-7b1bd2f79e0f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="MainPage.xaml.cpp" />
+    <ClCompile Include="pch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h" />
+    <ClInclude Include="MainPage.xaml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestZorba_TemporaryKey.pfx" />
+    <None Include="..\build\src\Debug\zorba_simplestore.dll">
+      <Filter>DLLs</Filter>
+    </None>
+    <None Include="..\..\vcpkg\packages\libiconv_arm-uwp\bin\libcharset.dll">
+      <Filter>DLLs</Filter>
+    </None>
+    <None Include="..\..\vcpkg\packages\libiconv_arm-uwp\bin\libiconv.dll">
+      <Filter>DLLs</Filter>
+    </None>
+    <None Include="..\..\vcpkg\packages\libxml2_arm-uwp\bin\libxml2.dll">
+      <Filter>DLLs</Filter>
+    </None>
+    <None Include="..\..\vcpkg\packages\zlib_arm-uwp\bin\zlib1.dll">
+      <Filter>DLLs</Filter>
+    </None>
+    <None Include="..\..\vcpkg\packages\liblzma_arm-uwp\bin\lzma.dll">
+      <Filter>DLLs</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MainPage.xaml" />
+  </ItemGroup>
+</Project>
