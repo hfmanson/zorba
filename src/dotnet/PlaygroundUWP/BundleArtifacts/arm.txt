@@ -1,0 +1,2 @@
+MainPackage=C:\Users\hfman\Documents\zorba\src\dotnet\PlaygroundUWP\bin\ARM\Debug\PlaygroundUWP_1.0.2.0_ARM_Debug.appx
+SymbolPackage=C:\Users\hfman\Documents\zorba\src\dotnet\PlaygroundUWP\AppPackages\PlaygroundUWP_1.0.2.0_Debug_Test\PlaygroundUWP_1.0.2.0_ARM_Debug.appxsym
