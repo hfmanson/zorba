@@ -1,0 +1,1 @@
+MainPackage=C:\Users\hfman\Source\Repos\Xslt2Game\Xslt2Game\bin\ARM\Debug\Xslt2Game_1.0.25.0_ARM_Debug.appx
