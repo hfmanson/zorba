@@ -2122,7 +2122,7 @@ bool type::validate( store::Item_t const &validate_item, bool do_cast,
     dctx.add_variable( dynamic_context::IDVAR_CONTEXT_ITEM, ctx_item );
 
     // we need these in the catch() clause below
-    zstring const *query;
+    zstring const *query = nullptr;
     type const *t;
 
     try {

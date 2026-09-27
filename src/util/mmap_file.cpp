@@ -120,6 +120,7 @@ void mmap_file::open( char const *path, ios::openmode mode ) {
     protect       = PAGE_READWRITE;
   }
 
+#ifndef WIN32_UWP
   fd_ = ::CreateFile(
     wPath, createAccess, shareMode, NULL, OPEN_EXISTING, 0, NULL
   );
@@ -134,6 +135,7 @@ void mmap_file::open( char const *path, ios::openmode mode ) {
 
   if ( !(addr_ = ::MapViewOfFile( mapping_, mapAccess, 0, 0, 0 )) )
     throw ZORBA_IO_EXCEPTION( "MapViewOfFile()", path_ );
+#endif // !WIN32_UWP
 #endif /* WIN32 */
 }
 

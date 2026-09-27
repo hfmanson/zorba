@@ -172,8 +172,10 @@ ostream& XQueryException::print_impl( ostream &o ) const {
         o << "/>" << if_nl; // <applied-at ...
       }
 
+#ifndef WIN32_UWP
       if ( get_print_trace( o ) )
         print_stack_trace( o );
+#endif // !WIN32_UWP
     }
     return o;
   } else {
@@ -214,6 +216,7 @@ ostream& XQueryException::print_impl( ostream &o ) const {
   }
 }
 
+#ifndef WIN32_UWP
 ostream& XQueryException::print_stack_trace( ostream &o ) const {
   XQueryStackTrace const &trace = query_trace();
   if ( !trace.empty() ) {
@@ -270,6 +273,7 @@ ostream& XQueryException::print_stack_trace( ostream &o ) const {
   }
   return o;
 }
+#endif // !WIN32_UWP
 
 bool XQueryException::print_uri( ostream &o, char const *uri ) {
   if ( uri && *uri ) {

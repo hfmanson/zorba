@@ -98,7 +98,9 @@ retry:
 
   if (theStatus == SUSPENDED) {
 #ifdef WIN32
+#ifndef WIN32_UWP
     TerminateThread(theThread, 0);
+#endif // !WIN32_UWP
 #else
     pthread_cancel(theThread);
     theCondition.signal();

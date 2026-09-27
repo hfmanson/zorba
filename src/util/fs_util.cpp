@@ -270,6 +270,7 @@ void create( char const *path ) {
     throw fs::exception( "creat()", path );
   ::close( fd );
 #else
+#ifndef WIN32_UWP
   WCHAR wpath[ MAX_PATH ];
   win32::atow( path, wpath, MAX_PATH );
   HANDLE fd = ::CreateFile(
@@ -281,6 +282,7 @@ void create( char const *path ) {
   if ( fd == INVALID_HANDLE_VALUE )
     throw fs::exception( "CreateFile()", path );
   ::CloseHandle( fd );
+#endif // !WIN32_UWP
 #endif /* WIN32 */
 }
 
@@ -290,11 +292,15 @@ string configdir() {
 #if defined( WINCE )
   return "";
 #elif defined( WIN32 )
+#ifndef WIN32_UWP
   char *buf;
   if ( _dupenv_s( &buf, nullptr, "APPDATA" ) != 0 )
     throw ZORBA_IO_EXCEPTION( "_dupenv_s()", "" );
   unique_ptr<char[]> const buf_ptr( buf );
   return buf;
+#else // !WIN32_UWP
+  return "";
+#endif // !WIN32_UWP
 #else
   return getenv( "HOME" );
 #endif
@@ -475,7 +481,9 @@ void iterator::ctor_impl() {
   if ( !(dir_ = ::opendir( dir_path_.c_str() )) )
     throw fs::exception( "iterator()", dir_path_.c_str() );
 #else
+#ifndef WIN32_UWP
   win32_opendir( dir_path_.c_str() );
+#endif // !WIN32_UWP
   entry_.name = entry_name_buf_;
 #endif /* WIN32 */
 }
@@ -485,7 +493,9 @@ iterator::~iterator() {
   if ( ::closedir( dir_ ) != 0 )
     throw fs::exception( "closedir()", path() );
 #else
+#ifndef WIN32_UWP
   win32_closedir();
+#endif // !WIN32_UWP
 #endif /* WIN32 */
 }
 
@@ -552,12 +562,15 @@ void iterator::reset() {
 #ifndef WIN32
   ::rewinddir( dir_ );
 #else
+#ifndef WIN32_UWP
   win32_closedir();
   win32_opendir( dir_path_.c_str() );
+#endif // !WIN32_UWP
 #endif /* WIN32 */
 }
 
 #ifdef WIN32
+#ifndef WIN32_UWP
 void iterator::win32_closedir() {
   if ( dir_ != INVALID_HANDLE_VALUE && !::FindClose( dir_ ) )
     throw fs::exception( "FindClose()", path() );
@@ -579,6 +592,7 @@ void iterator::win32_opendir( char const *path ) {
     use_first_ = true;
   }
 }
+#endif // !WIN32_UWP
 #endif /* WIN32 */
 
 bool remove( char const *path, bool ignore_not_found ) {
@@ -615,11 +629,13 @@ void rename( char const *from, char const *to ) {
   if ( ::rename( from, to ) != 0 )
     throw fs::exception( "rename()", from );
 #else
+#ifndef WIN32_UWP
   WCHAR wfrom[ MAX_PATH ], wto[ MAX_PATH ];
   win32::atow( from, wfrom, MAX_PATH );
   win32::atow( to, wto, MAX_PATH );
   if ( !::MoveFile( wfrom, wto ) )
     throw fs::exception( "MoveFile()", from );
+#endif // !WIN32_UWP
 #endif /* WIN32 */
 }
 

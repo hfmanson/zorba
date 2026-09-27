@@ -628,7 +628,7 @@ void DynamicContextImpl::checkItem(const store::Item_t& item)
   // For string items, check that the value is a valid Unicode codepoint sequence
   if (item->isStreamable() == false && item->isAtomic())
   {
-    const char* invalid_char;
+    const char* invalid_char = nullptr;
 
     store::SchemaTypeCode itemTypeCode = item->getTypeCode();
     

@@ -135,7 +135,7 @@ static zstring computeLibraryName(
 ExternalModule*
 DynamicLoader::loadModule(const zstring& aFile) const
 {
-  handle_t handle;
+  handle_t handle = 0;
   std::map<const zstring, handle_t>::const_iterator lIter;
 
   lIter = theLibraries.find(aFile);
@@ -146,11 +146,13 @@ DynamicLoader::loadModule(const zstring& aFile) const
   }
 
 #ifdef WIN32
+#ifndef WIN32_UWP
   WCHAR wpath_str[ MAX_PATH ];
   win32::atow( aFile.c_str(), wpath_str, MAX_PATH );
   SetErrorMode(SEM_NOOPENFILEERRORBOX|SEM_FAILCRITICALERRORS);
   handle = LoadLibraryW(wpath_str);
   SetErrorMode(0);
+#endif // !WIN32_UWP
   if (!handle)
     throw ZORBA_EXCEPTION(
       zerr::ZOSE0005_DLL_LOAD_FAILED,

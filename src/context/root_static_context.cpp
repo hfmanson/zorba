@@ -63,6 +63,7 @@ static void append_env_var(
   zstring& core_path,
   zstring& noncore_path)
 {
+#ifndef WIN32_UWP
   wchar_t env_var[MAX_VAR_SIZE];
   DWORD path_size;
   // get a relative path from the environment for LIB
@@ -92,6 +93,7 @@ static void append_env_var(
       str_env = std::strtok(NULL, ";");
     }
   }
+#endif // !WIN32_UWP
 }
 #else
 static void append_env_var(
@@ -206,6 +208,7 @@ void root_static_context::init()
   std::vector<zstring> lRootURIPath;
   std::vector<zstring> lRootLibPath;
 #ifdef WIN32
+#ifndef WIN32_UWP
   // compute the relative path to zorba_simplestore.dll (this dll)
   WCHAR  wdll_path[1024];
   DWORD dll_path_size;
@@ -243,6 +246,7 @@ void root_static_context::init()
       }
     }
   }
+#endif // !WIN32_UWP
 #endif
 
   const char ** lURIPathIter = get_builtin_uri_path();

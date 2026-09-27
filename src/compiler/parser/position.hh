@@ -108,7 +108,7 @@ namespace zorba {
     /// Compute max(min, lhs+rhs) (provided min <= lhs).
     static unsigned int add_ (unsigned int lhs, int rhs, unsigned int min)
     {
-      return (0 < rhs || -static_cast<unsigned int>(rhs) < lhs
+      return (0 < rhs || -static_cast<int>(rhs) < lhs
               ? rhs + lhs
               : min);
     }

@@ -45,6 +45,7 @@ namespace time {
 ///////////////////////////////////////////////////////////////////////////////
 
 #ifdef WIN32
+#include <winsock2.h>
 typedef long sec_type; // A type to hold a number of seconds (at least since epoch).
 typedef long usec_type; // A type to hold a number of microseconds.
 #else

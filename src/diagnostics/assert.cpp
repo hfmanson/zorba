@@ -52,8 +52,10 @@ static void print_stack_trace( ostream &o ) {
   }
 #endif /* ZORBA_HAVE_EXECINFO_H */
 #ifdef WIN32
+#ifndef WIN32_UWP
   StackWalker sw;
   sw.ShowCallstack();
+#endif // !WIN32_UWP
 #endif /* WIN32 */
 }
 

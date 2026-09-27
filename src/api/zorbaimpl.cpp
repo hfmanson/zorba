@@ -78,7 +78,9 @@ switch( dwCtrlType )
 ZorbaImpl::ZorbaImpl() : theNumUsers(0)
 {
 #ifdef WIN32
+#ifndef WIN32_UWP
   SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlCHandlerRoutine, TRUE);
+#endif
 #endif
 }
 

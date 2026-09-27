@@ -788,7 +788,7 @@ bool update(const K& item, const V& value)
   SYNC_CODE(AutoMutex lock(theMutexp);)
 
   HashEntry<K, V>* headEntry = bucket(hval);
-  HashEntry<K, V>* entry;
+  HashEntry<K, V>* entry = nullptr;
 
   if (! headEntry->isFree())
   {

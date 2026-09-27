@@ -277,6 +277,7 @@ void dynamic_context::set_environment_variables()
     theEnvironmentVariables = new EnvVarMap();
 
 #if defined (WIN32)
+#ifndef WIN32_UWP
     LPTCH envVarsCH = GetEnvironmentStrings();
     LPTSTR envVarsSTR = (LPTSTR) envVarsCH;
 
@@ -313,6 +314,7 @@ void dynamic_context::set_environment_variables()
     }
 
     FreeEnvironmentStrings(envVarsCH);
+#endif // !WIN32_UWP
 #else
     const char* invalid_char;
     for (char **env = environ; *env; ++env)

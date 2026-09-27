@@ -237,7 +237,7 @@ RULE_REWRITE_PRE(EliminateUnusedLetVars)
   {
     int numRefs;
     bool folded = false;
-    var_expr* var;
+    var_expr* var = nullptr;
 
     flwor_clause* c = theFlwor->get_clause(i);
 

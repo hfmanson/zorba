@@ -131,9 +131,11 @@ static int Zorba_GetLocaleInfoEx( LPCWSTR lpLocaleName, LCTYPE LCType,
   static bool init;
 
   if ( !init ) {
+#ifndef WIN32_UWP
     GetLocaleInfoEx_ptr = (GetLocaleInfoEx_type)::GetProcAddress(
       ::GetModuleHandle( TEXT( "kernel32.dll" ) ), "GetLocaleInfoEx"
     );
+#endif // !WIN32_UWP
     init = true;
   }
 
@@ -186,9 +188,11 @@ static bool Zorba_IsValidLocaleName( LPCWSTR lpLocaleName ) {
   static bool init;
 
   if ( !init ) {
+#ifndef WIN32_UWP
     IsValidLocaleName_ptr = (IsValidLocaleName_type)::GetProcAddress(
       ::GetModuleHandle( TEXT( "kernel32.dll" ) ), "IsValidLocaleName"
     );
+#endif // !WIN32_UWP
     init = true;
   }
 
