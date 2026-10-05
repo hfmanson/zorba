@@ -1,0 +1,58 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ZorbaGame.Views">
+
+    <Style x:Key="Mover" TargetType="local:BoxupControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:BoxupControl">
+                    <Polyline Points="0.375,0.375 0.625,0.375 0.625,0.625 0.375,0.625" Fill="Black"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="Block" TargetType="local:BoxupControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:BoxupControl">
+                    <Polyline Points="0.0,0.0 1.0,0.0 1.0,1.0 0.0,1.0 0.0,0.0" Fill="Black"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="SmallBox" TargetType="local:BoxupControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:BoxupControl">
+                    <Polyline
+                        Points="0.225,0.225 0.225,0.8 0.8,0.8 0.8,0.225" 
+                        Stroke="{Binding ViewModel.Stroke, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" 
+                        StrokeThickness="0.075">
+
+                        <Polyline.RenderTransform>
+                            <RotateTransform Angle="{Binding ViewModel.BoxRotation, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" CenterX="0.5" CenterY="0.5"/>
+                        </Polyline.RenderTransform>
+                    </Polyline>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="BigBox" TargetType="local:BoxupControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:BoxupControl">
+                    <Polyline
+                        Points="0.1,0.1 0.1,0.9 0.9,0.9 0.9,0.1" 
+                        Stroke="{Binding ViewModel.Stroke, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" 
+                        StrokeThickness="0.075">
+
+                        <Polyline.RenderTransform>
+                            <RotateTransform Angle="{Binding ViewModel.BoxRotation, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" CenterX="0.5" CenterY="0.5"/>
+                        </Polyline.RenderTransform>
+                    </Polyline>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

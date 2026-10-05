@@ -10,7 +10,7 @@ namespace ZorbaGame.ViewModels
         private double _left;
         private double _top;
         private double _boxRotation;
-        private Brush _stroke;
+        private string _stroke;
 
         public BoxNodeViewModel(XElement element)
         {
@@ -22,7 +22,19 @@ namespace ZorbaGame.ViewModels
             double dx = double.Parse(element.Attribute("dx")?.Value ?? "0");
             double dy = double.Parse(element.Attribute("dy")?.Value ?? "0");
             UpdateRotation(dx, dy);
-            _stroke = new SolidColorBrush();
+            XAttribute? boxtype = element.Attribute(XName.Get("box-type"));
+            _stroke = "black";
+            if (boxtype != null)
+            {
+                if (boxtype.Value == "source")
+                {
+                    _stroke = "red";
+                }
+                else if (boxtype.Value == "destination")
+                {
+                    _stroke = "blue";
+                }
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -50,7 +62,7 @@ namespace ZorbaGame.ViewModels
             set { _boxRotation = value; OnPropertyChanged(); }
         }
 
-        public Brush Stroke
+        public string Stroke
         {
             get => _stroke;
             set { _stroke = value; OnPropertyChanged(); }
