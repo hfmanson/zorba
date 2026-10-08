@@ -84,9 +84,13 @@ static std::string GetNativePackageDirectoryA()
 // Controleert op runtime of de app verpakt (MSIX/UWP) is
 bool IsRunningInPackage()
 {
+#ifdef WIN32_UWP
+    return true;
+#else
     UINT32 length = 0;
     LONG rc = GetCurrentPackageFullName(&length, NULL);
     return (rc != APPMODEL_ERROR_NO_PACKAGE);
+#endif
 }
 
 static void append_to_path(
