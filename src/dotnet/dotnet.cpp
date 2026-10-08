@@ -11,24 +11,34 @@
 
 using namespace std;
 
-std::string getCurrentDirectoryFileURL();
+std::string GetNativePackageDirectoryA();
+std::string PathToURL(std::string path);
 
 DomFacadeCallbacksNative g_facade;
-void* lStore = NULL;
-Zorba* lZorba = NULL;
-StaticContext_t sctx;
+
+static void* lStore = NULL;
+static Zorba* lZorba = NULL;
+static StaticContext_t sctx;
+static std::string assetsDirectory;
 
 extern "C" ZORBA_DLL_PUBLIC void InitEngine(DomFacadeCallbacksNative callbacks, const char* prolog)
 {
-    ShutdownEngine();
-    g_facade = callbacks;
-    lStore = StoreManager::getStore();
-    lZorba = Zorba::getInstance(lStore);
-    sctx = lZorba->createStaticContext();
-	sctx->setBaseURI(getCurrentDirectoryFileURL());
-	Zorba_CompilerHints_t hints;
-    zstring zstr(prolog);
-    sctx->loadProlog(zstr.str(), hints);
+    try
+    {
+        ShutdownEngine();
+        g_facade = callbacks;
+        lStore = StoreManager::getStore();
+        lZorba = Zorba::getInstance(lStore);
+        sctx = lZorba->createStaticContext();
+        assetsDirectory = GetNativePackageDirectoryA() + "Assets\\";
+        std::string baseURI = PathToURL(assetsDirectory);
+        sctx->setBaseURI(baseURI);
+        Zorba_CompilerHints_t hints;
+        zstring zstr(prolog);
+        sctx->loadProlog(zstr.str(), hints);
+    } catch (ZorbaException& e) {
+            cerr << e << std::endl;
+    }
 }
 
 extern "C" ZORBA_DLL_PUBLIC void ShutdownEngine()
@@ -52,7 +62,8 @@ extern "C" ZORBA_DLL_PUBLIC void* LoadXML(const char* xmlFile, bool validate)
 #ifndef ZORBA_NO_XMLSCHEMA
 	try
     {
-        ifstream is(xmlFile);
+        std::vector<String> aURIPaths;
+        ifstream is(assetsDirectory + xmlFile);
         XmlDataManager_t xmlMgr = lZorba->getXmlDataManager();
         if (validate)
         {
