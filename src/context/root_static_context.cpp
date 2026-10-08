@@ -32,6 +32,7 @@
 #include "store/api/item_factory.h"
 
 #ifdef WIN32
+#include <appmodel.h>
 #include <zorba/config.h>
 #endif //WIN32
 
@@ -43,6 +44,50 @@ namespace zorba
 
 #ifdef WIN32
 #define MAX_VAR_SIZE 32767
+
+static std::wstring GetNativePackageDirectory()
+{
+	wchar_t buffer[MAX_PATH];
+	DWORD size = GetModuleFileNameW(NULL, buffer, MAX_PATH);
+
+	if (size == 0 || size == MAX_PATH) {
+		return L"";
+	}
+
+	std::wstring fullPath(buffer);
+	size_t lastSlash = fullPath.find_last_of(L"\\/");
+	if (lastSlash != std::wstring::npos) {
+		return fullPath.substr(0, lastSlash + 1);
+	}
+
+	return L"";
+}
+
+static std::string WStringToString(const std::wstring& wstr)
+{
+	if (wstr.empty()) return std::string();
+
+	int sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), NULL, 0, NULL, NULL);
+
+	std::string strTo(sizeNeeded, 0);
+
+	WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &strTo[0], sizeNeeded, NULL, NULL);
+
+	return strTo;
+}
+
+static std::string GetNativePackageDirectoryA()
+{
+	return WStringToString(GetNativePackageDirectory());
+}
+
+// Controleert op runtime of de app verpakt (MSIX/UWP) is
+bool IsRunningInPackage()
+{
+    UINT32 length = 0;
+    LONG rc = GetCurrentPackageFullName(&length, NULL);
+    return (rc != APPMODEL_ERROR_NO_PACKAGE);
+}
 
 static void append_to_path(
     std::vector<zstring>& aPath,
@@ -247,13 +292,27 @@ void root_static_context::init()
     }
   }
 #endif // !WIN32_UWP
-#endif
-
-  const char ** lURIPathIter = get_builtin_uri_path();
+  if (IsRunningInPackage())
+  {
+      lRootURIPath.push_back(GetNativePackageDirectoryA() + "Assets\\");
+      lRootURIPath.push_back(GetNativePackageDirectoryA() + "Assets\\uris\\");
+  }
+  else
+  {
+    const char** lURIPathIter = get_builtin_uri_path();
+    for (; *lURIPathIter != 0; ++lURIPathIter)
+    {
+      lRootURIPath.push_back(*lURIPathIter);
+    }
+  }
+#else // WIN32
+  const char** lURIPathIter = get_builtin_uri_path();
   for (; *lURIPathIter != 0; ++lURIPathIter)
   {
-    lRootURIPath.push_back(*lURIPathIter);
+      lRootURIPath.push_back(*lURIPathIter);
   }
+#endif // WIN32
+
   set_uri_path(lRootURIPath);
 
   const char ** lLibPathIter = get_builtin_lib_path();
