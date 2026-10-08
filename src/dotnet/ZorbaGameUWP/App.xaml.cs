@@ -67,6 +67,7 @@ namespace ZorbaGameUWP
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
+                    NativeEngine.InitEngine("import module namespace boxup=\"http://mansoft.nl/boxup\" at 'boxup.xqm';");
                     rootFrame.Navigate(typeof(Boxup), e.Arguments);
                 }
                 // Ensure the current window is active

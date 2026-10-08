@@ -1,68 +1,54 @@
-﻿using System.Xml.Linq;
-using Windows.UI;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using ZorbaGameUWP.Views;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 
 namespace ZorbaGameUWP.ViewModels
 {
     public class BoxNodeViewModels : NodeViewModelsBase
     {
-        override public XDocument LoadGame(Canvas game, int level)
+        public ObservableCollection<BoxNodeViewModel> ActiveBoxesCollection { get; }
+            = new ObservableCollection<BoxNodeViewModel>();
+        private double _mapWidth;
+        private double _mapHeight;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+
+        public double MapWidth
+        {
+            get => _mapWidth;
+            set { _mapWidth = value; OnPropertyChanged(); }
+        }
+
+        public double MapHeight
+        {
+            get => _mapHeight;
+            set { _mapHeight = value; OnPropertyChanged(); }
+        }
+
+        override public XDocument LoadGame(int level)
         {
             XDocument document = LoadXML($"boxup{level}.xml");
+            XElement root = document.Root;
+            if (root != null)
+            {
+                string columns = root.Attribute("columns")?.Value;
+                string rows = root.Attribute("rows")?.Value;
+                if (columns != null && rows != null)
+                {
+                    MapWidth = double.Parse(columns) + 0.2;
+                    MapHeight = double.Parse(rows) + 0.2;
+                }
+            }
+            ActiveBoxesCollection.Clear();
             foreach (XElement element in document.Root.Elements())
             {
-                Control control;
                 BoxNodeViewModel model = new BoxNodeViewModel(element);
                 AddAttributeModel(model, element);
-                XAttribute depth = element.Attribute(XName.Get("depth"));
-                if (depth == null)
-                {
-                    // elements without depth: mover and block
-                    string LocalName = element.Name.LocalName;
-                    if (LocalName == "mover")
-                    {
-                        MoverControl moverControl = new MoverControl();
-                        moverControl.ViewModel = model;
-                        control = moverControl;
-                    }
-                    else
-                    {
-                        BlockControl blockControl = new BlockControl();
-                        blockControl.ViewModel = model;
-                        control = blockControl;
-                    }
-                }
-                else if (depth.Value == "2")
-                {
-                    SmallBoxControl smallBoxControl = new SmallBoxControl();
-                    smallBoxControl.ViewModel = model;
-                    control = smallBoxControl;
-                }
-                else
-                {
-                    BigBoxControl bigBoxControl = new BigBoxControl();
-                    bigBoxControl.ViewModel = model;
-                    control = bigBoxControl;
-                }
-                XAttribute boxtype = element.Attribute(XName.Get("box-type"));
-                if (boxtype != null)
-                {
-                    if (boxtype.Value == "source")
-                    {
-                        model.Stroke = new SolidColorBrush(Colors.Red);
-                    }
-                    else if (boxtype.Value == "destination")
-                    {
-                        model.Stroke = new SolidColorBrush(Colors.Blue);
-                    }
-                    else
-                    {
-                        model.Stroke = new SolidColorBrush(Colors.Black);
-                    }
-                }
-                game.Children.Add(control);
+                ActiveBoxesCollection.Add(model);
             }
             return document;
         }

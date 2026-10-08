@@ -1,13 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-
 using ZorbaUWP;
 
 namespace ZorbaGameUWP.ViewModels
@@ -18,7 +11,7 @@ namespace ZorbaGameUWP.ViewModels
         XDocument document;
         private readonly Dictionary<XAttribute, NodeViewModelBase> _attributeModels = new Dictionary<XAttribute, NodeViewModelBase>();
 
-        public abstract XDocument LoadGame(Canvas game, int level);
+        public abstract XDocument LoadGame(int level);
 
         private void Document_Changed(object sender, XObjectChangeEventArgs e)
         {
@@ -30,7 +23,6 @@ namespace ZorbaGameUWP.ViewModels
 
         protected XDocument LoadXML(string XMLFile)
         {
-            NativeEngine.InitEngine("import module namespace boxup='http://mansoft.nl/boxup' at 'boxup.xqm';");
             docItemHandle = NativeEngine.LoadXML(XMLFile, false);
             document = NativeEngine.GetXDocument(docItemHandle);
             document.Changed += Document_Changed;
@@ -45,9 +37,9 @@ namespace ZorbaGameUWP.ViewModels
             docItemHandle = IntPtr.Zero;
         }
 
-        public string RunXQuery(string xquery)
+        public void RunXQuery(string xquery)
         {
-            return NativeEngine.XQuery(xquery, docItemHandle);
+            NativeEngine.XQuery(xquery, docItemHandle);
         }
 
         protected void AddAttributeModel(NodeViewModelBase model, XElement element)

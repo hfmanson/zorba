@@ -127,16 +127,15 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Boxup.xaml.cs" />
+    <Compile Include="Boxup.xaml.cs">
+      <DependentUpon>Boxup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Selectors\BoxTemplateSelector.cs" />
     <Compile Include="ViewModels\BoxNodeViewModel.cs" />
     <Compile Include="ViewModels\BoxNodeViewModels.cs" />
     <Compile Include="ViewModels\NodeViewModelBase.cs" />
     <Compile Include="ViewModels\NodeViewModelsBase.cs" />
-    <Compile Include="Views\BigBoxControl.xaml.cs" />
-    <Compile Include="Views\BlockControl.xaml.cs" />
-    <Compile Include="Views\MoverControl.xaml.cs" />
-    <Compile Include="Views\SmallBoxControl.xaml.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -209,22 +208,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Boxup.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\BigBoxControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\BlockControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\MoverControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\SmallBoxControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
