@@ -10,7 +10,7 @@ namespace ZorbaGameUWP.ViewModels
     {
         override public XDocument LoadGame(Canvas game, int level)
         {
-            XDocument document = LoadXML($"Assets/boxup{level}.xml");
+            XDocument document = LoadXML($"boxup{level}.xml");
             foreach (XElement element in document.Root.Elements())
             {
                 Control control;

@@ -30,7 +30,7 @@ namespace ZorbaGameUWP.ViewModels
 
         protected XDocument LoadXML(string XMLFile)
         {
-            NativeEngine.InitEngine("import module namespace boxup='http://mansoft.nl/boxup' at 'Assets/boxup.xqm';");
+            NativeEngine.InitEngine("import module namespace boxup='http://mansoft.nl/boxup' at 'boxup.xqm';");
             docItemHandle = NativeEngine.LoadXML(XMLFile, false);
             document = NativeEngine.GetXDocument(docItemHandle);
             document.Changed += Document_Changed;

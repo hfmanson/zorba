@@ -11,8 +11,8 @@
     <AssemblyName>ZorbaGameUWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.15063.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.26100.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.26100.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -142,10 +142,41 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <Content Include="Assets\boxup.xqm" />
     <None Include="ZorbaGameUWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\uris\com\zorba-xquery\www\schemas\complete-pul.schema" />
+    <Content Include="Assets\uris\com\zorba-xquery\www\schemas\pul.schema" />
+    <Content Include="Assets\uris\com\zorba-xquery\www\schemas\xdm.schema" />
+    <Content Include="Assets\uris\io\zorba\modules\reflection.module" />
+    <Content Include="Assets\uris\io\zorba\modules\reflection_1.0.module" />
+    <Content Include="Assets\uris\io\zorba\modules\reflection_1.module" />
+    <Content Include="Assets\uris\io\zorba\modules\schema.module" />
+    <Content Include="Assets\uris\io\zorba\modules\schema_1.0.module" />
+    <Content Include="Assets\uris\io\zorba\modules\schema_1.module" />
+    <Content Include="Assets\uris\io\zorba\modules\xml-options.schema" />
+    <Content Include="Assets\uris\io\zorba\modules\xml.module" />
+    <Content Include="Assets\uris\io\zorba\modules\xml_1.0.module" />
+    <Content Include="Assets\uris\io\zorba\modules\xml_1.module" />
+    <Content Include="Assets\uris\io\zorba\errors.module" />
+    <Content Include="Assets\uris\io\zorba\errors_0.0.module" />
+    <Content Include="Assets\uris\io\zorba\errors_0.module" />
+    <Content Include="Assets\uris\io\zorba\warnings.module" />
+    <Content Include="Assets\uris\io\zorba\warnings_0.0.module" />
+    <Content Include="Assets\uris\io\zorba\warnings_0.module" />
+    <Content Include="Assets\uris\org\jsoniq\errors.module" />
+    <Content Include="Assets\uris\org\jsoniq\errors_0.0.module" />
+    <Content Include="Assets\uris\org\jsoniq\errors_0.module" />
+    <Content Include="Assets\uris\org\w3\www\2001\xml.xsd.schema" />
+    <Content Include="Assets\uris\org\w3\www\2005\XQueryX.schema" />
+    <Content Include="Assets\uris\org\w3\www\2010\xslt-xquery-serialization.schema" />
+    <Content Include="Assets\uris\org\w3\www\TR\xhtml1\DTD\xhtml-lat1.ent.schema" />
+    <Content Include="Assets\uris\org\w3\www\TR\xhtml1\DTD\xhtml-special.ent.schema" />
+    <Content Include="Assets\uris\org\w3\www\TR\xhtml1\DTD\xhtml-symbol.ent.schema" />
+    <Content Include="Assets\uris\org\w3\www\TR\xhtml1\DTD\xhtml1-frameset.dtd.schema" />
+    <Content Include="Assets\uris\org\w3\www\TR\xhtml1\DTD\xhtml1-strict.dtd.schema" />
+    <Content Include="Assets\uris\org\w3\www\TR\xhtml1\DTD\xhtml1-transitional.dtd.schema" />
+    <Content Include="Assets\boxup.xqm" />
     <Content Include="Assets\boxup1.xml" />
     <Content Include="Assets\boxup10.xml" />
     <Content Include="Assets\boxup11.xml" />
@@ -213,7 +244,7 @@
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-  <Import Project="..\ZorbaUWP\ZorbaUWP.targets" Condition="Exists('..\ZorbaUWP\ZorbaUWP.targets')" />
+  <Import Project="..\ZorbaUWP\ZorbaUWP.x64.targets" Condition="Exists('..\ZorbaUWP\ZorbaUWP.x64.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

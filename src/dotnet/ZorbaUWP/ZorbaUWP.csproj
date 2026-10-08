@@ -11,8 +11,8 @@
     <AssemblyName>ZorbaUWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.15063.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.26100.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.26100.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -104,8 +104,9 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <None Include="project.json" />
+    <!--<None Include="project.json" />-->
     <None Include="ZorbaUWP.targets" />
+    <None Include="ZorbaUWP.x64.targets" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DomImpl.cs" />
@@ -114,12 +115,17 @@
     <EmbeddedResource Include="Properties\ZorbaUWP.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DLLs\libcharset.dll" />
-    <Content Include="DLLs\libiconv.dll" />
-    <Content Include="DLLs\libxml2.dll" />
-    <Content Include="DLLs\lzma.dll" />
-    <Content Include="DLLs\ucrtbased.dll" />
-    <Content Include="DLLs\zlib1.dll" />
+    <Content Include="DLLs\ARM\libcharset.dll" />
+    <Content Include="DLLs\ARM\libiconv.dll" />
+    <Content Include="DLLs\ARM\libxml2.dll" />
+    <Content Include="DLLs\ARM\lzma.dll" />
+    <Content Include="DLLs\ARM\ucrtbased.dll" />
+    <Content Include="DLLs\ARM\zlib1.dll" />
+    <None Include="DLLs\win-x64\z.dll" />
+    <None Include="DLLs\win-x64\xerces-c_3_3.dll" />
+    <None Include="DLLs\win-x64\libxml2.dll" />
+    <None Include="DLLs\win-x64\iconv-2.dll" />
+    <None Include="DLLs\win-x64\charset-1.dll" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
